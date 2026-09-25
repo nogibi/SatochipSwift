@@ -802,6 +802,19 @@ public class SatocardCommandSet {
     //*               MARK: SATOCHIP
     //****************************************
     
+    @discardableResult
+    public func cardBip32ImportSeed(masterseed: [UInt8]) throws -> APDUResponse {
+        guard (16...64).contains(masterseed.count) else {
+            throw SatocardError.wrongParameter(msg: "Wrong seed length (should be 16-64)")
+        }
+        let capdu = APDUCommand(cla: CLA.proprietary.rawValue,
+                               ins: SatocardINS.bip32ImportSeed.rawValue,
+                               p1: UInt8(masterseed.count), p2: 0x00,
+                               data: masterseed)
+        let rapdu = try self.cardTransmit(plainApdu: capdu)
+        return try rapdu.checkOK()
+    }
+
     /**
      * Signs a transaction hash using the specified key with optional 2FA.
      *
