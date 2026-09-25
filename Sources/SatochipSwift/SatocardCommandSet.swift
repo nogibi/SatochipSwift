@@ -878,7 +878,7 @@ public class SatocardCommandSet {
      * - Returns: the tweaked public key as 65 bytes (uncompressed public key)
      * - Throws: SatocardError if tweak is not 32 bytes or if command APDU fails
      */
-    private func cardTaprootTweakPrivateKey(keynbr: Int, tweak: [UInt8], bypassFlag: Bool) throws -> [UInt8] {
+    public func cardTaprootTweakPrivateKey(keynbr: Int, tweak: [UInt8], bypassFlag: Bool) throws -> [UInt8] {
         
         guard tweak.count == 32 else {
             throw SatocardError.wrongParameter(msg: "Wrong tweak length (should be 32)")
@@ -991,7 +991,7 @@ public class SatocardCommandSet {
      * - Returns: array containing [pubnonce, encrypted_sec_nonce]
      * - Throws: SatocardError for parameter validation or if command APDU fails
      */
-    private func cardMusig2GenerateNonce(keynbr: Int, aggpk: [UInt8], msg: [UInt8], extra: [UInt8]) throws -> ([UInt8], [UInt8]) {
+    public func cardMusig2GenerateNonce(keynbr: Int, aggpk: [UInt8], msg: [UInt8], extra: [UInt8]) throws -> ([UInt8], [UInt8]) {
         
         // check inputs
         guard aggpk.count == 32 else {
@@ -1086,7 +1086,7 @@ public class SatocardCommandSet {
      * data (init): [encrypted secnonce(112b) | iv(16b) | mac(16b)]
      * data (finalize): [b(32b) | e*a(32b) | has_even_y(R) (1b) | g*gacc (1b)]
      */
-    private func cardMusig2Sign(keynbr: Int, secnonce: [UInt8], b: [UInt8], ea: [UInt8], rHasEvenY: Bool, ggaccIs1: Bool) throws -> [UInt8] {
+    public func cardMusig2Sign(keynbr: Int, secnonce: [UInt8], b: [UInt8], ea: [UInt8], rHasEvenY: Bool, ggaccIs1: Bool) throws -> [UInt8] {
         
         // check inputs
         guard secnonce.count == 144 else {
