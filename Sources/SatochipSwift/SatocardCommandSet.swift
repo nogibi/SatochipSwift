@@ -123,6 +123,7 @@ public class SatocardCommandSet {
     
     static let sensitiveInstructionSet: Set = [SatocardINS.setup.rawValue,
                                                SatocardINS.bip32ImportSeed.rawValue,
+                                               SatocardINS.bip32ResetSeed.rawValue,
                                                SatocardINS.changePin.rawValue,
                                                SatocardINS.verifyPin.rawValue,
                                                SatocardINS.unblockPin.rawValue,
@@ -811,6 +812,22 @@ public class SatocardCommandSet {
                                ins: SatocardINS.bip32ImportSeed.rawValue,
                                p1: UInt8(masterseed.count), p2: 0x00,
                                data: masterseed)
+        let rapdu = try self.cardTransmit(plainApdu: capdu)
+        return try rapdu.checkOK()
+    }
+
+    @discardableResult
+    public func cardResetSeed(pin: [UInt8], chalresponse: [UInt8]? = nil) throws -> APDUResponse {
+        guard (4...16).contains(pin.count) else {
+            throw SatocardError.wrongParameter(msg: "Wrong PIN length (should be 4-16)")
+        }
+        if let chalresponse = chalresponse, chalresponse.count != 20 {
+            throw SatocardError.wrongParameter(msg: "Wrong challenge-response length (should be 20)")
+        }
+        let capdu = APDUCommand(cla: CLA.proprietary.rawValue,
+                               ins: SatocardINS.bip32ResetSeed.rawValue,
+                               p1: UInt8(pin.count), p2: 0x00,
+                               data: pin + (chalresponse ?? []))
         let rapdu = try self.cardTransmit(plainApdu: capdu)
         return try rapdu.checkOK()
     }

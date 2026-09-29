@@ -49,7 +49,6 @@ public struct CardStatus {
                 needsSecureChannel = (data[11]==0x00 ? false : true)
             } else {
                 needsSecureChannel = false
-                needs2FA = false //default value
             }
         } else if rapdu.sw==0x9c04 {
             setupDone = false
